@@ -75,7 +75,7 @@ const getEmail = (req, res) => {
     const requestedUser = req.params.user ? req.params.user : req.user
     const user = userBase.find(({ username }) => {
         return username === requestedUser
-      })
+    })
         
     res.send({ username: user.username, email: user.email })
 }

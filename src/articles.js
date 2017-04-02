@@ -9,7 +9,8 @@ const articleBank = {
 
 const getArticles = (req, res) => {
     console.log('Payload received:', req.body)
-    if (req.params.id){
+    console.log('Parameters received:', req.params)
+    if (!req.params.id){
         // No id specified. Send all articles.
         res.send(articleBank)
     } else {
@@ -17,9 +18,12 @@ const getArticles = (req, res) => {
         const articles = []
         // Populate article list with articles that match on ids.
         ids.forEach(function(element) {
-            articles.push( articleBank.find(({ id }) => {
-                return id === element
-            }))  
+            const addArticle = articleBank.articles.find(({ id }) => {
+                return id == element
+            })
+            if(addArticle){
+                articles.push(addArticle)
+            }
         }, this);
 
         res.send({ articles: articles })
@@ -28,37 +32,38 @@ const getArticles = (req, res) => {
 
 const updateArticles = (req, res) => {
     console.log('Payload received:', req.body)
+    console.log('Parameters received:', req.params)
     if (!req.user) {
         req.user = 'Dummy'
     }
-    const requestedArticle = req.params.id ? req.params.user : req.user
-    const article = articleBank.find(({ id }) => {
-        return id === requestedArticle
+    const article = articleBank.articles.find(({ id }) => {
+        return id == req.params.id
     })
-    
     if (!article) {
         res.sendStatus(404)
         return
     }
 
-    if (req.body.commentId){
+    if (req.body.hasOwnProperty("commentId")){
         // Update or post comment.
         if (req.body.commentId >= 0) {
-            if (article.comments) {
+            if (article.comments && article.comments.length > 0) {
                 const comment = article.comments.find(({ commentId }) => {
-                    return commentId === req.body.commentId
+                    return commentId == req.body.commentId
                 })
-                comment.text = req.body.text
+                console.log(comment)
+                if (comment){
+                    comment.text = req.body.text
+                } else{
+                    res.sendStatus(404)
+                    return
+                }
             } else{
                 res.sendStatus(404)
                 return
             }
         } else{
-            if (article.comments) {
-                article.comments.push({ commentId: article.cid++, author: req.user, text: req.body.text })
-            } else{
-                article.comments = [{ commentId: article.cid++, author: req.user, text: req.body.text }]
-            }
+            article.comments.push({ commentId: article.cid++, author: req.user, text: req.body.text })
         }
     } else {
         // Update article.
@@ -69,18 +74,19 @@ const updateArticles = (req, res) => {
 
 const postArticle = (req, res) => {
     console.log('Payload received:', req.body)
+    console.log('Parameters received:', req.params)
     if (!req.user) {
         req.user = 'Dummy'
     }
     // TODO: Image upload?
-     const newArticle = { id: ++articleID, author: req.user, text: req.body.text}
-     articleBank.articles.push(newArticle)
-     res.send(newArticle)
+    const newArticle = { id: ++articleID, author: req.user, text: req.body.text, comments: [], cid: 0}
+    articleBank.articles.push(newArticle)
+    res.send(newArticle)
 }
 
 
 module.exports = (app) => {
     app.get('/articles/:id*?', getArticles)
     app.put('/articles/:id', updateArticles)
-    app.post('/article', postArticles)
+    app.post('/article', postArticle)
 }

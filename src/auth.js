@@ -78,12 +78,13 @@ const registerUser = (req, res) => {
 }
 
 const updatePassword = (req, res) => {
-
+    // Password changing is not supported. Return with denial message.
+    res.send({username: sessionUser[req.cookies[cooKey]], status: 'cannot change password'})
 }
 
 module.exports = (app) => {
     app.post('/login', loginUser)
     app.put('/logout', logoutUser)
     app.post('/register', registerUser)
-    app.put('/password', updatePsssword)
+    app.put('/password', updatePassword)
 }
