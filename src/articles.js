@@ -1,9 +1,9 @@
 var articleID = 2
 const articleBank = {
         articles: [
-            { id: 0, author: "Ben", text: 'lol here is some text', comments: [], cid: 0 },
-            { id: 1, author: "Ben", text: 'another article', comments: [], cid: 0 },
-            { id: 2, author: "Ben", text: 'what am i doing', comments: [], cid: 0 } 
+            { id: 0, author: "Ben", text: 'lol here is some text', comments: [] },
+            { id: 1, author: "Ben", text: 'another article', comments: [] },
+            { id: 2, author: "Ben", text: 'what am i doing', comments: [] } 
         ]
     }
 
@@ -63,7 +63,7 @@ const updateArticles = (req, res) => {
                 return
             }
         } else{
-            article.comments.push({ commentId: article.cid++, author: req.user, text: req.body.text })
+            article.comments.push({ commentId: article.comments.length, author: req.user, text: req.body.text })
         }
     } else {
         // Update article.

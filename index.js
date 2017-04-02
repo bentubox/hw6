@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const app = express()
 app.use(bodyParser.json())
 app.use(cookieParser())
+
 require('./src/articles')(app)
 require('./src/auth')(app)
 require('./src/following')(app)

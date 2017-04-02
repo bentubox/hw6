@@ -42,6 +42,8 @@ const index = (req, res) => {
 }
 
 const getHeadlines = (req, res) => {
+    console.log('Payload received:', req.body)
+    console.log('Parameters received:', req.params)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -52,14 +54,17 @@ const getHeadlines = (req, res) => {
     // Populate result array with user objects from memory.
     users.forEach(function(element) {
       const user = userBase.find(({ username }) => {
-        return username === element
-      })
-      results.push( { username : user.username, headline: user.headline })  
+            return username === element
+        })
+        if(user){
+            results.push( { username : user.username, headline: user.headline })  
+        }
     }, this);
-
+    console.log(results)
     res.send({ headlines: results })
 }
 const updateHeadline = (req, res) => {
+    console.log('Payload received:', req.body)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -69,6 +74,8 @@ const updateHeadline = (req, res) => {
 }
 
 const getEmail = (req, res) => {
+    console.log('Payload received:', req.body)
+    console.log('Parameters received:', req.params)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -76,10 +83,14 @@ const getEmail = (req, res) => {
     const user = userBase.find(({ username }) => {
         return username === requestedUser
     })
-        
+    if (!user) {
+        res.sendStatus(404)
+        return
+    }  
     res.send({ username: user.username, email: user.email })
 }
 const updateEmail = (req, res) => {
+    console.log('Payload received:', req.body)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -88,6 +99,8 @@ const updateEmail = (req, res) => {
 }
 
 const getDOB = (req, res) => {
+    console.log('Payload received:', req.body)
+    console.log('Parameters received:', req.params)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -95,11 +108,16 @@ const getDOB = (req, res) => {
     const user = userBase.find(({ username }) => {
         return username === requestedUser
     })
-        
+    if (!user) {
+        res.sendStatus(404)
+        return
+    }  
     res.send({ username: user.username, dob: user.dob })
 }
 
 const getZipcode = (req, res) => {
+    console.log('Payload received:', req.body)
+    console.log('Parameters received:', req.params)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -107,10 +125,14 @@ const getZipcode = (req, res) => {
     const user = userBase.find(({ username }) => {
         return username === requestedUser
     })
-
-    res.send({ username: username, zipcode: user.zipcode})
+    if (!user) {
+        res.sendStatus(404)
+        return
+    }
+    res.send({ username: user.username, zipcode: user.zipcode})
 }
 const updateZipcode = (req, res) => {
+    console.log('Payload received:', req.body)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -119,6 +141,8 @@ const updateZipcode = (req, res) => {
 }
 
 const getAvatars = (req, res) => {
+    console.log('Payload received:', req.body)
+    console.log('Parameters received:', req.params)
     if (!req.user) {
         req.user = 'Dummy'
     }
@@ -130,17 +154,21 @@ const getAvatars = (req, res) => {
       const user = userBase.find(({ username }) => {
         return username === element
       })
-      results.push( { username : user.username, avatar: user.avatar })  
+        if(user){
+            results.push( { username : user.username, avatar: user.avatar })
+        }
     }, this);
 
     res.send({ headlines: results })
 }
 const updateAvatar = (req, res) => {
+    console.log('Payload received:', req.body)
+    // console.log('Form received:', req.form)
     if (!req.user) {
         req.user = 'Dummy'
     }
     // TODO: Save file and return URL?
-    profile.avatar = req.body.get('image')
+    profile.avatar = req.body.image
     res.send({ username: req.user, avatar: profile.avatar})
 }
 
@@ -156,7 +184,7 @@ module.exports = (app) => {
     app.get('/dob', getDOB)
     
     app.get('/zipcode/:user?', getZipcode)
-    app.put('/headline', updateZipcode)
+    app.put('/zipcode', updateZipcode)
 
     app.get('/avatars/:users?*', getAvatars)
     app.put('/avatar', updateAvatar)

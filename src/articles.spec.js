@@ -65,13 +65,11 @@ describe('Test of backend article functionality', () => {
 		// verify the content of the article
 		// add a second article
 		// verify the article id increases by one
-		// verify the second artice has the correct content
+		// verify the second article has the correct content
 		fetch(url("/article"), 
 			{ 
 				method: 'POST',
-				headers: {
-      				'Content-Type': 'application/json'
-				},
+				headers: {'Content-Type': 'application/json'},
 				body: JSON.stringify({text: "article1"})
 			}
 		).then( r => {
@@ -84,9 +82,7 @@ describe('Test of backend article functionality', () => {
 			fetch(url("/article"), 
 				{ 
 					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
+					headers: {'Content-Type': 'application/json'},
 					body: JSON.stringify({text: "article2"})
 				}
 			).then( ( r2 => {
