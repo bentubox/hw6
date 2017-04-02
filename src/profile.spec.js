@@ -8,7 +8,7 @@ describe('Test of backend headline functionality for user profiles', ()=> {
         
     })
 
-    xit('should retrieve the proper headline from memory for a specified user', (done) => {
+    xit('should retrieve the proper headline from memory for specified users', (done) => {
         
     })
 

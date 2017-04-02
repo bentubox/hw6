@@ -42,6 +42,7 @@ const loginUser = (req, res) => {
 }
 
 const isLoggedIn = (req, res, next) => {
+    console.log('Payload received:', req.body)
     const sid = req.cookies[cooKey]
     if(!sid){
          return res.sendStatus(401)
@@ -84,7 +85,7 @@ const updatePassword = (req, res) => {
 
 module.exports = (app) => {
     app.post('/login', loginUser)
-    app.put('/logout', logoutUser)
+    app.put('/logout', isLoggedIn, logoutUser)
     app.post('/register', registerUser)
-    app.put('/password', updatePassword)
+    app.put('/password', isLoggedIn, updatePassword)
 }
