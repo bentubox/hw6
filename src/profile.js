@@ -163,12 +163,9 @@ const getAvatars = (req, res) => {
 }
 const updateAvatar = (req, res) => {
     console.log('Payload received:', req.body)
-    // console.log('Form received:', req.form)
     if (!req.user) {
         req.user = 'Dummy'
     }
-    // TODO: Save file and return URL?
-    profile.avatar = req.body.image
     res.send({ username: req.user, avatar: profile.avatar})
 }
 
